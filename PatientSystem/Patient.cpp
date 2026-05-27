@@ -83,7 +83,12 @@ const std::string& Patient::primaryDiagnosis() const
 	return _diagnosis.front();
 }
 
-void Patient::addVitals(const Vitals* v)
+void Patient::addVitals(const Vitals* v) {
+	//Historical add - does not recalculate alert level.
+	_vitals.push_back(v);
+}
+
+void Patient::recordVitals(const Vitals* v)
 {
 	_vitals.push_back(v);
 	if (_alertStrategy != nullptr) {
@@ -100,7 +105,6 @@ const std::vector<const Vitals*> Patient::vitals() const
 void Patient::setAlertLevel(AlertLevel level)
 {
 	_alertLevel = level;
-
 	if (_alertLevel > AlertLevel::Green) {
 		cout << "Patient: " << humanReadableID() << "has an alert level: ";
 		switch (_alertLevel) {

@@ -41,8 +41,16 @@ public:
 	void addDiagnosis(const std::string& diagnosis);
 	const std::string& primaryDiagnosis() const;
 
-	// add a vitals mesaurements record to the patient
+	//Add a historical vitals measurement for the patient
+	//Used by laoders for historical data: this does NOT recalculate
+	// the alert level
 	void addVitals(const Vitals* v);
+
+	//Record a new vitals measurement for the patient
+	//This recalculates the alert level using the strategy and
+	//notifies observers if the alert level changes
+	void recordVitals(const Vitals* v);
+
 	const std::vector<const Vitals*> vitals() const;
 
 	// patients have an alert level (green, yellow, orange, red) calculated from their disease and and their last vitals
