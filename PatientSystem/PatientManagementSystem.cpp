@@ -8,15 +8,33 @@
 #include "PatientDatabaseLoader.h"
 #include "Vitals.h"
 #include "PatientFileLoaderAdapter.h"
+#include "CompositePatientLoader.h"
 
 #include "GPNotificationSystemFacade.h"
 #include "HospitalAlertSystemFacade.h"
 
 using namespace std;
 
+//Build the default loade configuration.
+// Switching between database, file, or both in a one-line change
+// comment/uncomment the relevant line below:
+static std::unique_ptr<AbstractPatientDatabaseLoader> buildDefaultLoader() {
+	// Default: Load from database and file
+	auto composite = std::make_unique<CompositePatientLoader>();
+	composite->addLoader(std::make_unique<PatientDatabaseLoader>());
+	composite->addLoader(std::make_unique<PatientFileLoaderAdapter>("patients.txt"));
+	return composite;
+
+	// Load from database only
+	/*return std::make_unique<PatientDatabaseLoader>();*/
+
+	// Load from file only
+	/*return std::make_unique<PatientFileLoaderAdapter>("patients.txt");*/
+}
+
 
 PatientManagementSystem::PatientManagementSystem() :
-	_patientDatabaseLoader(std::make_unique<PatientFileLoaderAdapter>("patients.txt")),
+	_patientDatabaseLoader(buildDefaultLoader()),
 	_hospitalAlertSystem(std::make_unique<HospitalAlertSystemFacade>()),
 	_gpNotificationSystem(std::make_unique<GPNotificationSystemFacade>())
 {
