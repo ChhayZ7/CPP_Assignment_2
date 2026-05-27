@@ -8,6 +8,7 @@
 
 
 // forward declare classes
+class AlertLevelStrategy;
 class Vitals;
 
 class Diagnosis {
@@ -21,6 +22,7 @@ class Patient : public Person {
 public:
 
 	Patient(const std::string& firstName, const std::string& lastName, std::tm birthday);
+	virtual ~Patient();
 
 	// return a calculated age for the patient
 	// this calculation is not accurate, but is suitable for assignment purposes
@@ -51,6 +53,9 @@ protected:
 	std::vector<std::string> _diagnosis;
 	std::vector<const Vitals*> _vitals;
 	AlertLevel _alertLevel;
+
+	//Strategy for calculating alert levels (FR3)
+	std::unique_ptr<AlertLevelStrategy> _alertStrategy;
 
 	friend std::ostream& operator<<(std::ostream& os, const Patient& p);
 };
