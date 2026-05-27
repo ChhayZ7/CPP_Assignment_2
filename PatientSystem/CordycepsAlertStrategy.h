@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AlertStrategy.h"
+#include "AlertLevelStrategy.h"
 
 // Concrete strategy for Cordyceps Brain Infection
 // Alert level is determined by respiratory rate (RR):
@@ -8,7 +8,7 @@
 // RR > 30 -> Orange
 // RR > 20 -> Yellow
 // else -> Green
-class CordycepsAlertStrategy
+class CordycepsAlertStrategy: public AlertLevelStrategy
 {
 public: 
 	virtual AlertLevel calculate(const Patient& patient, const Vitals& vitals) const override;
