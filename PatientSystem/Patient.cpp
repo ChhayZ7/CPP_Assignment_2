@@ -5,6 +5,8 @@
 #include <sstream>
 
 #include "Vitals.h"
+#include "AlertLevelStrategy.h"
+#include "AlertLevelStrategyFactory.h"
 
 
 using namespace std;
@@ -16,8 +18,17 @@ const std::string Diagnosis::ANDROMEDA_STRAIN= "Andromeda Strain";
 
 Patient::Patient(const std::string& firstName, const std::string& lastName, std::tm birthday) :
 	Person(firstName, lastName, birthday),
-	_alertLevel(AlertLevel::Green)
+	_alertLevel(AlertLevel::Green),
+	_alertStrategy(nullptr)
 {
+}
+
+Patient::~Patient()
+{
+	// Clean up vitals owned by this patient
+	for (const Vitals* v : _vitals) {
+		delete v;
+	}
 }
 
 int Patient::age() const
@@ -59,6 +70,12 @@ std::ostream& operator<<(std::ostream& os, const Patient& p)
 void Patient::addDiagnosis(const std::string& diagnosis)
 {
 	_diagnosis.push_back(diagnosis);
+
+	//The primary diagnosis (first added) decides which alert level strategy is used. 
+	//Set the strategy once via the factory.
+	if (_diagnosis.size() == 1) {
+		_alertStrategy = AlertLevelStrategyFactory::createForDiagnosis(diagnosis);
+	}
 }
 
 const std::string& Patient::primaryDiagnosis() const
@@ -69,7 +86,10 @@ const std::string& Patient::primaryDiagnosis() const
 void Patient::addVitals(const Vitals* v)
 {
 	_vitals.push_back(v);
-	// TODO: calculate alert levels
+	if (_alertStrategy != nullptr) {
+		const AlertLevel newLevel = _alertStrategy->calculate(*this, *v);
+		setAlertLevel(newLevel);
+	}
 }
 
 const std::vector<const Vitals*> Patient::vitals() const
