@@ -56,10 +56,11 @@ void PatientManagementSystem::init()
 	_patientDatabaseLoader->loadPatients(_patients);
 	for (Patient* p : _patients) {
 		_patientLookup[p->uid()] = p;
-	}
 
-	for (Patient* p : _patients) {
-		// TODO: do any processing you need here
+		//Attach the hospital and GP facades as observers so they get
+		//notified whenever this patient's alert level changes
+		p->attachObserver(_hospitalAlertSystem.get());
+		p->attachObserver(_gpNotificationSystem.get());
 	}
 }
 
