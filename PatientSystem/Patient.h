@@ -10,6 +10,7 @@
 // forward declare classes
 class AlertLevelStrategy;
 class Vitals;
+class PatientAlertObserver;
 
 class Diagnosis {
 public:
@@ -57,13 +58,22 @@ public:
 	void setAlertLevel(AlertLevel level);
 	const AlertLevel alertLevel() const { return _alertLevel; }
 
+	//Observer registration. The patient does NOT own its observers
+	//The caller is responsible for their lifetime
+	void attachObserver(PatientAlertObserver* observer);
+
 protected:
 	std::vector<std::string> _diagnosis;
 	std::vector<const Vitals*> _vitals;
 	AlertLevel _alertLevel;
 
-	//Strategy for calculating alert levels (FR3)
+	//Strategy for calculating alert levels
 	std::unique_ptr<AlertLevelStrategy> _alertStrategy;
+
+	std::vector<PatientAlertObserver*> _observers;
+
+	//Notify all attached observers of an alert level change
+	void notifyObservers() const;
 
 	friend std::ostream& operator<<(std::ostream& os, const Patient& p);
 };

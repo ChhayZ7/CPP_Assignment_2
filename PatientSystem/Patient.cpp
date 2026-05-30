@@ -1,4 +1,5 @@
 #include "Patient.h"
+#include "PatientAlertObserver.h"
 
 #include <iomanip>
 #include <iostream>
@@ -104,6 +105,7 @@ const std::vector<const Vitals*> Patient::vitals() const
 
 void Patient::setAlertLevel(AlertLevel level)
 {
+	const AlertLevel previousLevel = _alertLevel;
 	_alertLevel = level;
 	if (_alertLevel > AlertLevel::Green) {
 		cout << "Patient: " << humanReadableID() << "has an alert level: ";
@@ -119,5 +121,23 @@ void Patient::setAlertLevel(AlertLevel level)
 			break;
 		}
 		cout << endl;
+	}
+
+	// Notify observers if the alert level has changed
+	if (_alertLevel != previousLevel) {
+		notifyObservers();
+	}
+}
+
+void Patient::attachObserver(PatientAlertObserver* observer)
+{
+	if (observer != nullptr) {
+		_observers.push_back(observer);
+	}
+}
+
+void Patient::notifyObservers() const {
+	for (PatientAlertObserver* observer : _observers) {
+		observer->onPatientAlertLevelChanged(*this);
 	}
 }
