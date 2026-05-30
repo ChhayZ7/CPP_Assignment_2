@@ -7,6 +7,8 @@ class Patient;
 
 class AbstractPatientDatabaseLoader {
 public:
+	virtual ~AbstractPatientDatabaseLoader() = default;
+
 	// initialise the database connection
 	virtual void initialiseConnection() = 0;
 
