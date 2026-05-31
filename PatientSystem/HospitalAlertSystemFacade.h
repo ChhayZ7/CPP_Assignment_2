@@ -12,10 +12,9 @@ public:
 	HospitalAlertSystemFacade();
 	virtual ~HospitalAlertSystemFacade();
 
-	void sendAlertForPatient(const Patient& patient);
-
 	// Inherited via PatientAlertObserver
 	virtual void onPatientAlertLevelChanged(const Patient& patient) override;
-
+private:
+	void sendAlertForPatient(const Patient& patient);
 };
 
