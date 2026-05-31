@@ -7,6 +7,7 @@
 class Person {
 public:
 	Person(const std::string& firstName, const std::string& lastName, std::tm birthday);
+	virtual ~Person() = default;
 
 	const std::string& firstName() const { return _firstName; }
 	const std::string& lastName() const { return _lastName; }

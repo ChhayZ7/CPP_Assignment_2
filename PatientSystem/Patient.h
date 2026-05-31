@@ -56,7 +56,7 @@ public:
 
 	// patients have an alert level (green, yellow, orange, red) calculated from their disease and and their last vitals
 	void setAlertLevel(AlertLevel level);
-	const AlertLevel alertLevel() const { return _alertLevel; }
+	AlertLevel alertLevel() const { return _alertLevel; }
 
 	//Observer registration. The patient does NOT own its observers
 	//The caller is responsible for their lifetime

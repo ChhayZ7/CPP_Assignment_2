@@ -35,10 +35,11 @@ protected:
 	std::vector<Patient*> _patients;
 	std::map<std::string, Patient*> _patientLookup;
 
+	std::unique_ptr<AbstractPatientDatabaseLoader> _patientDatabaseLoader;
 	std::unique_ptr<HospitalAlertSystemFacade> _hospitalAlertSystem;
 	std::unique_ptr<GPNotificationSystemFacade> _gpNotificationSystem;
 
-	std::unique_ptr<AbstractPatientDatabaseLoader> _patientDatabaseLoader;
+
 
 };
 
